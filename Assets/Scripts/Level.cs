@@ -13,8 +13,8 @@ public class Level : MonoBehaviour,IEventHandler {
 	LevelState m_LevelState;
 
 	List<Enemy> m_Enemies = new List<Enemy>();
-
-	[SerializeField] float m_WaitDurationBeforeLightFirstWick;
+    //[SerializeField] int m_LevelNumber;
+    [SerializeField] float m_WaitDurationBeforeLightFirstWick;
 
 	[SerializeField] float m_NBombPointsToBeCollectedForPowerCoin;
 	float m_CollectedBombPoints = 0;
@@ -23,8 +23,14 @@ public class Level : MonoBehaviour,IEventHandler {
 	[SerializeField] Transform[] m_PowerCoinSpawnPoints;
 
 	[SerializeField] float m_EnemiesBecomeCoinDuration;
+    private int m_LevelIndex; //khady
+    public int LevelIndex {get { return m_LevelIndex; } set { m_LevelIndex = value; } }//khady
 
-	Vector3 RandomSpawnPos { get {
+    [SerializeField] float m_MinSpeedCoef;//khady
+    [SerializeField] float m_MaxSpeedCoef;//khady
+    [SerializeField] float m_MaxLevelIndex;//khady
+
+    Vector3 RandomSpawnPos { get {
 			List<Vector3> spawnPositions = m_PowerCoinSpawnPoints.Select(item => item.position).Where(item=>!Physics.CheckSphere(item,m_PowerCoinPrefab.GetComponent<SphereCollider>().radius)).ToList();
 			spawnPositions.Sort((a, b) => Random.value.CompareTo(.5f));
 
@@ -59,7 +65,10 @@ public class Level : MonoBehaviour,IEventHandler {
 	{
 		//enemies
 		m_Enemies = GetComponentsInChildren<Enemy>().ToList();
-
+        foreach(var item in m_Enemies)
+        {
+            item.SpeedCoef = Mathf.Lerp(m_MinSpeedCoef, m_MaxSpeedCoef, m_LevelIndex / m_MaxLevelIndex);
+        }
 		m_LevelState = LevelState.enemiesAreEnemies;
 
 		Bomb.LightTheWickOfRandomBomb(m_WaitDurationBeforeLightFirstWick);

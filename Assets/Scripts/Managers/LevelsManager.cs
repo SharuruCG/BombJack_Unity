@@ -50,7 +50,9 @@ public class LevelsManager : Manager<LevelsManager> {
 		levelIndex = Mathf.Max(levelIndex, 0) % m_LevelsPrefabs.Length;
 		m_CurrentLevelGO = Instantiate(m_LevelsPrefabs[levelIndex]);
 		m_CurrentLevel = m_CurrentLevelGO.GetComponent<Level>();
-	}
+        m_CurrentLevel.LevelIndex = levelIndex;//Denzel
+
+    }
 
 	private IEnumerator GoToNextLevelCoroutine()
 	{
@@ -59,8 +61,9 @@ public class LevelsManager : Manager<LevelsManager> {
 
 		InstantiateLevel(m_CurrentLevelIndex);
 
-		EventManager.Instance.Raise(new LevelHasBeenInstantiatedEvent() { eLevel = m_CurrentLevel });
-	}
+		EventManager.Instance.Raise(new LevelHasBeenInstantiatedEvent() { eLevel = m_CurrentLevel , eLevelIndex = m_CurrentLevelIndex});//Denzel
+        //EventManager.Instance.Raise(new LevelHasBeenInstantiatedEvent() { eLevel = m_CurrentLevel, eLevelIndex = m_CurrentLevelIndex });//Denzel
+    }
 	#endregion
 
 	#region Callbacks to GameManager events

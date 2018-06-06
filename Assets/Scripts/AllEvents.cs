@@ -28,6 +28,7 @@ public class GameStatisticsChangedEvent : SDD.Events.Event
 	public int eScore { get; set; }
 	public int eNLives { get; set; }
 	public int eNEnemiesLeftBeforeVictory { get; set; }
+   
 }
 #endregion
 
@@ -98,6 +99,7 @@ public class BombPointsForPowerCoinsChangedEvent : SDD.Events.Event
 public class LevelHasBeenInstantiatedEvent : SDD.Events.Event
 {
 	public Level eLevel;
+    public int eLevelIndex;
 }
 #endregion
 

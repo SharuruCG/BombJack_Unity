@@ -35,6 +35,10 @@ public abstract class Enemy : SimpleGameStateObserver,IScore {
 	protected float m_TranslationSpeed;
 	public float TranslationSpeed { get { return m_TranslationSpeed; } }
 
+    private float m_BaseTranslationSpeed;
+    private float m_SpeedCoef;//khady
+    public float SpeedCoef { get { return m_SpeedCoef; } set { m_SpeedCoef = value; } }//khady
+
 	protected abstract Vector3 MoveVect { get; }
 
 	//Enemy Gfx 
@@ -55,9 +59,10 @@ public abstract class Enemy : SimpleGameStateObserver,IScore {
 
 		m_Rigidbody = GetComponent<Rigidbody>();
 		m_Transform = GetComponent<Transform>();
-
-		m_TranslationSpeed = Mathf.Lerp(m_MinTranslationSpeed, m_MaxTranslationSpeed, m_TranslationSpeedProbaCurve.Evaluate(Random.value));
-	}
+        m_BaseTranslationSpeed = Mathf.Lerp(m_MinTranslationSpeed, m_MaxTranslationSpeed, m_TranslationSpeedProbaCurve.Evaluate(Random.value)); //khady
+       
+        
+    }
 
 	protected virtual void Start()
 	{
@@ -66,7 +71,9 @@ public abstract class Enemy : SimpleGameStateObserver,IScore {
 
 	private void Update()
 	{
-		m_EnemyGfx.gameObject.SetActive(m_State == State.enemy);
+        m_TranslationSpeed = SpeedCoef * m_BaseTranslationSpeed;//khady ajout de SpeedCoef
+
+        m_EnemyGfx.gameObject.SetActive(m_State == State.enemy);
 		m_CoinGfx.gameObject.SetActive(m_State == State.coin);
 	}
 
