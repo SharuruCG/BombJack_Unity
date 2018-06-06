@@ -17,12 +17,17 @@ public class Level : MonoBehaviour,IEventHandler {
     [SerializeField] float m_WaitDurationBeforeLightFirstWick;
 
 	[SerializeField] float m_NBombPointsToBeCollectedForPowerCoin;
-	float m_CollectedBombPoints = 0;
+    [SerializeField] float m_NBombPointsToBeCollectedForLifeCoin;
+    float m_CollectedBombPoints = 0;
 
 	[SerializeField] GameObject m_PowerCoinPrefab;
-	[SerializeField] Transform[] m_PowerCoinSpawnPoints;
+    [SerializeField] Transform[] m_PowerCoinSpawnPoints;
 
-	[SerializeField] float m_EnemiesBecomeCoinDuration;
+    [SerializeField] GameObject m_LifeCoinPrefab;  //Khady
+    [SerializeField] Transform[] m_LifeCoinSpawnPoints; //Khady
+
+
+    [SerializeField] float m_EnemiesBecomeCoinDuration;
     private int m_LevelIndex; //khady
     public int LevelIndex {get { return m_LevelIndex; } set { m_LevelIndex = value; } }//khady
 
@@ -37,19 +42,34 @@ public class Level : MonoBehaviour,IEventHandler {
 			return spawnPositions[Random.Range(0, spawnPositions.Count)]; }
 	}
 
-	public void SubscribeEvents()
+
+    Vector3 RandomSpawnPosLifeCoin  //Khady
+    {
+        get
+        {
+            List<Vector3> spawnPositions = m_LifeCoinSpawnPoints.Select(item => item.position).Where(item => !Physics.CheckSphere(item, m_LifeCoinPrefab.GetComponent<SphereCollider>().radius)).ToList();
+            spawnPositions.Sort((a, b) => Random.value.CompareTo(.5f));
+
+            return spawnPositions[Random.Range(0, spawnPositions.Count)];
+        }
+    }
+
+
+    public void SubscribeEvents()
 	{
 		EventManager.Instance.AddListener<EnemyHasBeenDestroyedEvent>(EnemyHasBeenDestroyed);
 		EventManager.Instance.AddListener<BombHasBeenDestroyedEvent>(BombHasBeenDestroyed);
 		EventManager.Instance.AddListener <PowerCoinHasBeenHitEvent>(PowerCoinHasBeenHit);
-	}
+        EventManager.Instance.AddListener<LifeCoinHasBeenHitEvent>(LifeCoinHasBeenHit);
+    }
 
 	public void UnsubscribeEvents()
 	{
 		EventManager.Instance.RemoveListener<EnemyHasBeenDestroyedEvent>(EnemyHasBeenDestroyed);
 		EventManager.Instance.RemoveListener<BombHasBeenDestroyedEvent>(BombHasBeenDestroyed);
 		EventManager.Instance.RemoveListener<PowerCoinHasBeenHitEvent>(PowerCoinHasBeenHit);
-	}
+        EventManager.Instance.RemoveListener<LifeCoinHasBeenHitEvent>(LifeCoinHasBeenHit);
+    }
 
 	private void OnDestroy()
 	{
@@ -108,12 +128,18 @@ public class Level : MonoBehaviour,IEventHandler {
 		SetBombPoints(0);
 	}
 
+
 	void PowerCoinHasBeenHit(PowerCoinHasBeenHitEvent e)
 	{
 		StartCoroutine(EnemiesBecomeCoinsCoroutine(m_EnemiesBecomeCoinDuration));
 	}
 
-	void EnemyHasBeenDestroyed(EnemyHasBeenDestroyedEvent e)
+    void LifeCoinHasBeenHit(LifeCoinHasBeenHitEvent e)
+    {
+
+        StartCoroutine(EnemiesBecomeCoinsCoroutine(m_EnemiesBecomeCoinDuration));
+    }
+void EnemyHasBeenDestroyed(EnemyHasBeenDestroyedEvent e)
 	{
 		m_Enemies.RemoveAll(item => item.Equals(null));
 		m_Enemies.Remove(e.eEnemy);

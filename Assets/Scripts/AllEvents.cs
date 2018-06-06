@@ -100,6 +100,7 @@ public class LevelHasBeenInstantiatedEvent : SDD.Events.Event
 {
 	public Level eLevel;
     public int eLevelIndex;
+    public int eLives;
 }
 #endregion
 
@@ -113,3 +114,10 @@ public class PowerCoinHasBeenHitEvent : SDD.Events.Event
 {
 }
 #endregion
+
+#region LifeCoin
+public class LifeCoinHasBeenHitEvent : SDD.Events.Event
+{
+}
+#endregion
+

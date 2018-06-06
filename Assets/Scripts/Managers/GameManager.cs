@@ -34,8 +34,11 @@ public class GameManager : Manager<GameManager> {
 	{
 		SetNLives(m_NLives - decrement);
 	}
-
-	void SetNLives(int nLives)
+    void IncrementNLives(int increment)
+    {
+        SetNLives(m_NLives + increment);
+    }
+    void SetNLives(int nLives)
 	{
 		m_NLives = nLives;
 		EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eBestScore = BestScore, eScore = m_Score, eNLives = m_NLives, eNEnemiesLeftBeforeVictory = m_NEnemiesLeftBeforeVictory });
@@ -140,7 +143,10 @@ public class GameManager : Manager<GameManager> {
 
 		//Player
 		EventManager.Instance.AddListener<PlayerHasBeenHitEvent>(PlayerHasBeenHit);
-	}
+
+        //LifeCoin   //Khady
+        EventManager.Instance.AddListener<LifeCoinHasBeenHitEvent>(LifeCoinHasBeenHit);
+    }
 
 	public override void UnsubscribeEvents()
 	{
@@ -332,5 +338,11 @@ public class GameManager : Manager<GameManager> {
 		SfxManager.Instance.PlaySfx(Constants.VICTORY_SFX);
 		EventManager.Instance.Raise(new GameVictoryEvent());
 	}
-	#endregion
+    void LifeCoinHasBeenHit(LifeCoinHasBeenHitEvent e)
+    {
+
+        StartCoroutine(EnemiesBecomeCoinsCoroutine(m_EnemiesBecomeCoinDuration));
+    }
+    #endregion
+
 }

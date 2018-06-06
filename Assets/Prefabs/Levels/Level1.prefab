@@ -8204,6 +8204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_WaitDurationBeforeLightFirstWick: 2
   m_NBombPointsToBeCollectedForPowerCoin: 10
+  m_NBombPointsToBeCollectedForLifeCoin: 2
   m_PowerCoinPrefab: {fileID: 1064546033974118, guid: 838e7751b1ccf2b42bc53c1ab34fd558,
     type: 2}
   m_PowerCoinSpawnPoints:

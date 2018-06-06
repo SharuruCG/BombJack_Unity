@@ -51,6 +51,7 @@ public class LevelsManager : Manager<LevelsManager> {
 		m_CurrentLevelGO = Instantiate(m_LevelsPrefabs[levelIndex]);
 		m_CurrentLevel = m_CurrentLevelGO.GetComponent<Level>();
         m_CurrentLevel.LevelIndex = levelIndex;//Denzel
+      //  m_CurrentLevel.L
 
     }
 
